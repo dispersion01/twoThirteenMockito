@@ -25,51 +25,51 @@ public class EmployeeServiceTest {
 
     @Test
     public void addEmployee() {
-        assertThrows(EmployeeNotFoundException.class, () -> out.getAllEmployee().size());
-        Employee actual = out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY);
-        assertEquals(EMPLOYEE, actual);
-        assertEquals(1, out.getAllEmployee().size());
+        assertThrows(EmployeeNotFoundException.class, () -> out.getAllEmployee().size()); // проверяем исключение, когда список пуст
+        Employee actual = out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY); // добавляем элемент в список
+        assertEquals(EMPLOYEE, actual);  //проверяем есть ли в списке тет сотрудник который мы добавили
+        assertEquals(1, out.getAllEmployee().size()); // expect 1 не очень поняла, что значит, но теоретически предположу, что проверяет что в список был добавлен один элемент
     }
 
     @Test
-    public void addEmployeeWithExistsException() {
-        Employee actual = out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY);
-        assertTrue(out.getAllEmployee().contains(actual));
-        assertEquals(1, out.getAllEmployee().size());
-        assertThrows(EmployeeExistsException.class, () -> out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY));
+    public void addEmployeeWithExistsException() { // проверяем, что сотрудник уже есть в списке при создании новой записи через исключение
+        Employee actual = out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY); // добавляем
+        assertTrue(out.getAllEmployee().contains(actual)); //убеждаемся, что новый элемент есть в списке
+        assertEquals(1, out.getAllEmployee().size()); // пока не разобрала что означает expect 1
+        assertThrows(EmployeeExistsException.class, () -> out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY)); // если сотрудник существует, показывает ошибку
     }
 
     @Test
     public void findEmployee() {
-        out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY);
+        out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY); //чтобы проверить есть ли сотрудник, нужно сначала его добавить. Кстати вот эта разница между моками где мы не использовали add, а уже заранее задавали какой-то существующий список или сотрудника
         Employee result = new Employee(FIRST_NAME, SECOND_NAME);
         assertEquals(result, out.findEmployee(FIRST_NAME, SECOND_NAME));
     }
 
     @Test
-    public void findEmployeeWithNotFoundException() {
+    public void findEmployeeWithNotFoundException() { //проверяем сработает ли исключение при поиске сотрудника
         assertThrows(EmployeeNotFoundException.class, () -> out.findEmployee(FIRST_NAME, SECOND_NAME));
     }
 
     @Test
-    public void removeEmployee() {
+    public void removeEmployee() { //удаляем сотрудника, но чтобы что-то удалить нужно сначала в него добавить
         out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY);
-        assertEquals(1, out.getAllEmployee().size());
-        out.removeEmployee(FIRST_NAME, SECOND_NAME);
-        assertThrows(EmployeeNotFoundException.class, () -> out.getAllEmployee().size());
+        assertEquals(1, out.getAllEmployee().size()); // проверяем что список изменился
+        out.removeEmployee(FIRST_NAME, SECOND_NAME);//потом удаляем
+        assertThrows(EmployeeNotFoundException.class, () -> out.getAllEmployee().size()); // и проверяем что получим ошибку, т.к. элемент удалили
     }
 
     @Test
-    public void removeEmployeeWithNotFoundException() {
-        assertThrows(EmployeeNotFoundException.class, () -> out.removeEmployee(FIRST_NAME, SECOND_NAME));
+    public void removeEmployeeWithNotFoundException() { // проверяем, что метод remove выдаст исключение, когда такого элемента нет в списке
+        assertThrows(EmployeeNotFoundException.class, () -> out.removeEmployee(FIRST_NAME, SECOND_NAME)); //тут мы ничего не добавляли, соответственно сработает исключение
     }
 
 
     @Test
-    public void shouldReturnListOfEmployeesWhenTheyExist() {
-        out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY);
-        Collection<Employee> expected = List.of(EMPLOYEE);
-        Collection<Employee> actual = out.getAllEmployee();
-        assertIterableEquals(expected, actual);
+    public void shouldReturnListOfEmployeesWhenTheyExist() { // вот этот тест не совсем понятен
+        out.addEmployee(FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY); // добавляем сотрудника
+        Collection<Employee> expected = List.of(EMPLOYEE); //список сотрудников в виде коллекции, изменяемый EMPLOYEE
+        Collection<Employee> actual = out.getAllEmployee(); //проверяем, то что есть в списке сотрудников, т.к. выше мы добавили сотрудника, его скорее всего и покажет
+        assertIterableEquals(expected, actual); //пришлось загуглить метод. Проверяем, что то добавили в список и то что там есть это правда
     }
 }
