@@ -13,8 +13,8 @@ public interface DepartmentService {
 
     Employee sumSalary(int departmenId);
 
-    Map<Integer, List<Employee>> allEmployeeNames();
-
     Collection<Employee> allEmployeeByDepartment(int departmentId);
+
+    Map<Integer, List<Employee>> allEmployeeNames();
 
 }

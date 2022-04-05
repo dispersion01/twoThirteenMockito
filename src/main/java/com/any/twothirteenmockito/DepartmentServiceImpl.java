@@ -13,22 +13,22 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     //    решение через Map
 
-    private EmployeeServiceImpl departmentService;
+    private final EmployeeService employeeService;
 
-    public DepartmentServiceImpl(EmployeeServiceImpl departmentService) {
-        this.departmentService = departmentService;
+    public DepartmentServiceImpl(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
-
+@Override
     public Employee maxSalary(int departmentId) {
-        return departmentService.getAll().stream()
+        return employeeService.getAll().stream()
                 .filter(employee -> employee.getDepartment() == departmentId)
                 .max(Comparator.comparing(Employee::getSalary))
                 .orElseThrow();
     }
 
-
+@Override
     public Employee minSalary(int departmentId) {
-        return departmentService.getAll().stream()
+        return employeeService.getAll().stream()
                 .filter(employee -> employee.getDepartment() == departmentId)
                 .max(Comparator.comparing(Employee::getSalary))
                 .orElseThrow();
@@ -48,15 +48,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Map<Integer, List<Employee>> allEmployeeNames() {
-        return departmentService.getAll().stream()
+        return employeeService.getAll().stream()
                 .sorted(Comparator.comparing(Employee::getFamilyName).thenComparing(Employee::getDepartment))
                 .collect(Collectors.groupingBy(Employee::getDepartment));
     }
 
 
     public Collection<Employee> allEmployeeByDepartment(int departmentId) {
-        return departmentService.getAll().stream()
-                .filter(employee -> employee.getDepartment() == departmentId)
+        return employeeService.getAll().stream()
+                .filter(department -> department.getDepartment() == departmentId)
                 .collect(Collectors.toList());
     }
 
